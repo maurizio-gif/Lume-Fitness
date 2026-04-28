@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lume Fitness — Performance Aprile 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#D4003A;--red-dark:#a8002e;--red-bg:rgba(212,0,58,0.10);
+  --bg:#151517;--bg2:#1c1c1f;--bg3:#242427;--bg4:#2e2e32;
+  --line:rgba(255,255,255,0.07);--line2:rgba(255,255,255,0.13);
+  --text:#f0f0f0;--muted:#888890;--dim:#55555d;
+  --green:#2dd88a;--green-bg:rgba(45,216,138,0.10);
+  --amber:#f5a923;--amber-bg:rgba(245,169,35,0.10);
+  --blue:#4a9df5;--blue-bg:rgba(74,157,245,0.10);
+  --purple:#a78bfa;
+  --nav-h:60px;
+}
+html{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px}
+body{margin:0}
+
+/* ── NAV ── */
+nav{
+  background:#111113;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2rem;height:var(--nav-h);position:sticky;top:0;z-index:200;gap:12px;
+}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.nav-logo-mark{
+  width:34px;height:34px;background:var(--red);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:13px;color:#fff;
+}
+.nav-logo-text{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;letter-spacing:2px;color:var(--text);text-transform:uppercase}
+.nav-center{display:flex;gap:2px;flex:1;justify-content:center;flex-wrap:nowrap}
+.nav-tab{
+  padding:6px 14px;border:none;background:none;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;
+  letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);
+  border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;
+}
+.nav-tab:hover{color:var(--text)}
+.nav-tab.active{color:var(--text);border-bottom-color:var(--red)}
+.nav-badge{
+  background:var(--red);color:#fff;border:none;cursor:default;
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;
+  letter-spacing:1.5px;text-transform:uppercase;padding:7px 16px;border-radius:3px;flex-shrink:0;
+}
+/* Hamburger */
+.burger{
+  display:none;flex-direction:column;justify-content:center;gap:5px;
+  background:none;border:none;cursor:pointer;padding:6px;flex-shrink:0;
+}
+.burger span{width:22px;height:2px;background:var(--text);border-radius:1px;transition:.2s}
+/* Mobile drawer */
+.mobile-menu{
+  display:none;position:fixed;top:var(--nav-h);left:0;right:0;bottom:0;
+  background:rgba(0,0,0,0.85);z-index:190;backdrop-filter:blur(4px);
+}
+.mobile-menu.open{display:flex;flex-direction:column}
+.mobile-menu-inner{background:#111113;border-bottom:1px solid var(--line2)}
+.mobile-tab{
+  display:block;width:100%;padding:16px 2rem;border:none;background:none;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);
+  text-align:left;border-bottom:1px solid var(--line);transition:.15s;
+}
+.mobile-tab:hover,.mobile-tab.active{color:var(--text);background:var(--bg2)}
+.mobile-tab.active{border-left:3px solid var(--red)}
+
+/* ── HERO ── */
+.hero{
+  background:var(--bg2);border-bottom:1px solid var(--line);
+  padding:2rem 2rem 1.8rem;display:flex;align-items:flex-end;
+  justify-content:space-between;flex-wrap:wrap;gap:1rem;
+}
+.hero-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--red);font-weight:700;margin-bottom:6px}
+.hero-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:46px;letter-spacing:-0.5px;text-transform:uppercase;line-height:.95;color:var(--text)}
+.hero-title span{color:var(--red)}
+.hero-meta{text-align:right}
+.hero-meta p{font-size:13px;color:var(--muted);line-height:1.7}
+.hero-meta strong{color:var(--text);font-weight:600}
+
+/* ── MAIN ── */
+.main{max-width:1300px;margin:0 auto;padding:2rem 2rem 5rem}
+.panel{display:none}
+.panel.active{display:block}
+
+/* ── SECTION HEADING ── */
+.section-head{display:flex;align-items:center;gap:14px;margin-bottom:1.5rem}
+.section-sq{width:16px;height:16px;background:var(--red);flex-shrink:0}
+.section-head h2{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:26px;letter-spacing:1px;text-transform:uppercase;color:var(--text)}
+
+/* ── KPI ROW ── */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:2px;margin-bottom:2px}
+.kpi{background:var(--bg2);border:1px solid var(--line);padding:20px 22px}
+.kpi-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1.8px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:8px}
+.kpi-value{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:38px;letter-spacing:-1px;line-height:1;color:var(--text)}
+.kpi-value.red{color:var(--red)}.kpi-value.green{color:var(--green)}.kpi-value.amber{color:var(--amber)}.kpi-value.blue{color:var(--blue)}
+.kpi-sub{font-size:12px;color:var(--dim);margin-top:5px}
+
+/* ── WEEKLY CARDS ── */
+.week-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin:2px 0}
+.week-card{background:var(--bg2);border:1px solid var(--line);padding:18px 20px;position:relative;overflow:hidden}
+.week-card.best::before{content:'TOP';position:absolute;top:10px;right:10px;background:var(--red);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:800;letter-spacing:1.5px;padding:2px 7px}
+.week-card.partial::before{content:'APERTO';position:absolute;top:10px;right:10px;background:var(--amber-bg);color:var(--amber);font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:800;letter-spacing:1.5px;padding:2px 7px;border:1px solid rgba(245,169,35,.3)}
+.wk-tag{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1.8px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:10px}
+.wk-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin:12px 0 4px}
+.wk-big{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:28px;letter-spacing:-0.5px;line-height:1}
+.wk-big.g{color:var(--green)}.wk-big.r{color:var(--red)}.wk-big.a{color:var(--amber)}.wk-big.b{color:var(--blue)}.wk-big.w{color:var(--text)}
+.wk-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px;gap:6px;flex-wrap:wrap}
+.wk-stat{text-align:center}
+.wk-stat-n{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;line-height:1}
+.wk-stat-l{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin-top:3px}
+.trend{font-size:11px;font-weight:600;margin-top:4px}
+.trend.up{color:var(--green)}.trend.down{color:var(--red)}.trend.flat{color:var(--muted)}
+
+/* ── CHARTS ── */
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin:2px 0}
+.chart-block{background:var(--bg2);border:1px solid var(--line);padding:20px 22px}
+.chart-block.full{grid-column:1/-1}
+.chart-head{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:1.8px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.chart-wrap{position:relative;width:100%}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px}
+.leg{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);font-weight:500}
+.leg-sq{width:9px;height:9px;flex-shrink:0}
+
+/* ── ALERTS ── */
+.alert{display:flex;gap:12px;padding:13px 16px;margin:2px 0;font-size:13px;line-height:1.55;border-left:3px solid}
+.a-red{background:var(--red-bg);border-color:var(--red);color:#e06070}
+.a-amb{background:var(--amber-bg);border-color:var(--amber);color:#c49040}
+.a-blu{background:var(--blue-bg);border-color:var(--blue);color:#6090c8}
+.a-grn{background:var(--green-bg);border-color:var(--green);color:#28a870}
+
+/* ── TABLE ── */
+.tbl-wrap{background:var(--bg2);border:1px solid var(--line);margin-top:2px;overflow-x:auto}
+.tbl-wrap table{width:100%;border-collapse:collapse;font-size:13px;min-width:500px}
+.tbl-wrap th{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:700;padding:12px 16px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+.tbl-wrap td{padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl-wrap tr:last-child td{border-bottom:none}
+.tbl-wrap tr:hover td{background:var(--bg3)}
+.badge{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:2px}
+.bg{background:var(--green-bg);color:var(--green)}
+.br{background:var(--red-bg);color:var(--red)}
+.ba{background:var(--amber-bg);color:var(--amber)}
+.bd{background:rgba(255,255,255,0.05);color:var(--muted)}
+.btrack{height:4px;border-radius:2px;background:var(--bg4);width:90px;overflow:hidden;display:inline-block;vertical-align:middle}
+.bfill{height:100%;border-radius:2px}
+.score{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px}
+
+/* ── INSIGHT GRID ── */
+.ins-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:2px;margin-top:2px}
+.ins{background:var(--bg2);border:1px solid var(--line);padding:20px 22px}
+.ins.ir{border-left:3px solid var(--red)}.ins.ia{border-left:3px solid var(--amber)}.ins.ig{border-left:3px solid var(--green)}.ins.ib{border-left:3px solid var(--blue)}
+.ins-lbl{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:7px}
+.ins-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:19px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:9px;color:var(--text)}
+.ins-text{font-size:13px;color:var(--muted);line-height:1.6}
+.ins-text strong{color:var(--text);font-weight:600}
+.divider{height:1px;background:var(--line);margin:2.5rem 0}
+
+/* ── FOOTER ── */
+footer{background:#111113;border-top:1px solid var(--line);padding:1.2rem 2rem;display:flex;justify-content:space-between;font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);flex-wrap:wrap;gap:8px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .week-strip{grid-template-columns:1fr 1fr}
+  .chart-grid{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .week-strip{grid-template-columns:1fr 1fr}
+  .nav-center{display:none}
+  .nav-badge{display:none}
+  .burger{display:flex}
+  .hero{padding:1.5rem}
+  .hero-title{font-size:36px}
+  .hero-meta{text-align:left}
+  .main{padding:1.5rem 1rem 4rem}
+  .kpi-row{grid-template-columns:1fr 1fr}
+}
+@media(max-width:400px){
+  .week-strip{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#"><div class="nav-logo-mark">LF</div><div class="nav-logo-text">Lume</div></a>
+  <div class="nav-center">
+    <button class="nav-tab active" onclick="showTab('richieste',this)">Richieste</button>
+    <button class="nav-tab" onclick="showTab('recruitment',this)">Recruitment</button>
+    <button class="nav-tab" onclick="showTab('guestpass',this)">Guest Pass</button>
+    <button class="nav-tab" onclick="showTab('rinnovi',this)">Rinnovi</button>
+    <button class="nav-tab" onclick="showTab('task',this)">Task</button>
+    <button class="nav-tab" onclick="showTab('sintesi',this)">Sintesi</button>
+  </div>
+  <div class="nav-badge">Apr 2026</div>
+  <button class="burger" id="burgerBtn" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE DRAWER -->
+<div class="mobile-menu" id="mobileMenu" onclick="closeMenuOnBg(event)">
+  <div class="mobile-menu-inner">
+    <button class="mobile-tab active" id="mtab-richieste" onclick="showTab('richieste',this,true)">Richieste</button>
+    <button class="mobile-tab" id="mtab-recruitment" onclick="showTab('recruitment',this,true)">Recruitment</button>
+    <button class="mobile-tab" id="mtab-guestpass" onclick="showTab('guestpass',this,true)">Guest Pass</button>
+    <button class="mobile-tab" id="mtab-rinnovi" onclick="showTab('rinnovi',this,true)">Rinnovi</button>
+    <button class="mobile-tab" id="mtab-task" onclick="showTab('task',this,true)">Qualità Task</button>
+    <button class="mobile-tab" id="mtab-sintesi" onclick="showTab('sintesi',this,true)">Sintesi</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div><p class="hero-label">Performance Report</p><h1 class="hero-title">Dashboard<br><span>Aprile 2026</span></h1></div>
+  <div class="hero-meta"><p><strong>1 aprile → 27 aprile 2026</strong></p><p>4 settimane · Lun → Dom</p><p>Macerata · Montecassiano</p></div>
+</div>
+
+<div class="main">
+
+<!-- ════════════════ RICHIESTE ════════════════ -->
+<section class="panel active" id="tab-richieste">
+  <div class="section-head"><div class="section-sq"></div><h2>Funnel Richieste</h2></div>
+
+  <div class="kpi-row">
+    <div class="kpi"><p class="kpi-label">Lead totali W1–W4</p><p class="kpi-value blue">178</p><p class="kpi-sub">esclusi doppi e cancellati</p></div>
+    <div class="kpi"><p class="kpi-label">CR media W1–W3</p><p class="kpi-value green">40.8%</p><p class="kpi-sub">su lead chiusi</p></div>
+    <div class="kpi"><p class="kpi-label">Iscritti confermati</p><p class="kpi-value green">60</p><p class="kpi-sub">W1–W3 chiusi</p></div>
+    <div class="kpi"><p class="kpi-label">Lead aperti W4</p><p class="kpi-value amber">22</p><p class="kpi-sub">in prova + in gestione</p></div>
+  </div>
+
+  <!-- Weekly cards -->
+  <div class="week-strip">
+    <div class="week-card">
+      <p class="wk-tag">W1 · 1–6 apr</p>
+      <p class="wk-title">Lead entrati</p><p class="wk-big w">46</p>
+      <div class="wk-row">
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--green)">17</p><p class="wk-stat-l">Iscritti</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--red)">13</p><p class="wk-stat-l">Persi</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--amber)">8</p><p class="wk-stat-l">Futura</p></div>
+      </div>
+      <p class="wk-title">Conversion rate</p><p class="wk-big g">37%</p>
+      <p class="trend flat">— partenza</p>
+    </div>
+    <div class="week-card best">
+      <p class="wk-tag">W2 · 7–13 apr</p>
+      <p class="wk-title">Lead entrati</p><p class="wk-big w">58</p>
+      <div class="wk-row">
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--green)">26</p><p class="wk-stat-l">Iscritti</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--red)">13</p><p class="wk-stat-l">Persi</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--amber)">14</p><p class="wk-stat-l">Futura</p></div>
+      </div>
+      <p class="wk-title">Conversion rate</p><p class="wk-big g">44.8%</p>
+      <p class="trend up">▲ +7.8pp vs W1</p>
+    </div>
+    <div class="week-card">
+      <p class="wk-tag">W3 · 14–20 apr</p>
+      <p class="wk-title">Lead entrati</p><p class="wk-big w">37</p>
+      <div class="wk-row">
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--green)">15</p><p class="wk-stat-l">Iscritti</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--red)">7</p><p class="wk-stat-l">Persi</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--amber)">10</p><p class="wk-stat-l">Futura</p></div>
+      </div>
+      <p class="wk-title">Conversion rate</p><p class="wk-big g">40.5%</p>
+      <p class="trend down">▼ −4.3pp vs W2</p>
+    </div>
+    <div class="week-card partial">
+      <p class="wk-tag">W4 · 21–27 apr</p>
+      <p class="wk-title">Lead entrati</p><p class="wk-big w">37</p>
+      <div class="wk-row">
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--green)">2</p><p class="wk-stat-l">Iscritti</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--red)">3</p><p class="wk-stat-l">Persi</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--blue)">22</p><p class="wk-stat-l">Aperti</p></div>
+      </div>
+      <p class="wk-title">CR su chiusi</p><p class="wk-big a">5.4%*</p>
+      <p class="trend flat">* dato non definitivo</p>
+    </div>
+  </div>
+
+  <div class="alert a-amb"><span>▲</span><div><strong>W4 dato parziale.</strong> 10 lead IN PROVA + 12 IN GESTIONE ancora aperti. Il 5.4% di CR è fuorviante — la settimana si chiuderà nei prossimi giorni.</div></div>
+
+  <div class="chart-grid">
+    <div class="chart-block">
+      <p class="chart-head">Lead per stato — per settimana</p>
+      <div class="legend">
+        <span class="leg"><span class="leg-sq" style="background:#2dd88a"></span>Iscritto</span>
+        <span class="leg"><span class="leg-sq" style="background:#D4003A"></span>Perso</span>
+        <span class="leg"><span class="leg-sq" style="background:#f5a923"></span>Gest. futura</span>
+        <span class="leg"><span class="leg-sq" style="background:#4a9df5"></span>In prova/gest.</span>
+      </div>
+      <div class="chart-wrap" style="height:230px"><canvas id="richBar" role="img" aria-label="Lead per stato per settimana"></canvas></div>
+    </div>
+    <div class="chart-block">
+      <p class="chart-head">Conversion rate settimanale (W1–W3)</p>
+      <div class="chart-wrap" style="height:230px"><canvas id="richLine" role="img" aria-label="CR settimanale"></canvas></div>
+    </div>
+    <div class="chart-block">
+      <p class="chart-head">Mix tipo richiesta — W1 · 1-6 apr</p>
+      <div class="chart-wrap" style="height:210px"><canvas id="tipoW1" role="img" aria-label="Tipo W1"></canvas></div>
+    </div>
+    <div class="chart-block">
+      <p class="chart-head">Mix tipo richiesta — W2 · 7-13 apr</p>
+      <div class="chart-wrap" style="height:210px"><canvas id="tipoW2" role="img" aria-label="Tipo W2"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ RECRUITMENT ════════════════ -->
+<section class="panel" id="tab-recruitment">
+  <div class="section-head"><div class="section-sq"></div><h2>Funnel Recruitment</h2></div>
+
+  <div class="kpi-row">
+    <div class="kpi"><p class="kpi-label">Candidati totali</p><p class="kpi-value blue">13</p><p class="kpi-sub">W1 + W2 solamente</p></div>
+    <div class="kpi"><p class="kpi-label">Iscritti</p><p class="kpi-value green">5</p><p class="kpi-sub">CR media 38.5%</p></div>
+    <div class="kpi"><p class="kpi-label">W3 + W4</p><p class="kpi-value red">0</p><p class="kpi-sub">funnel azzerato</p></div>
+    <div class="kpi"><p class="kpi-label">Gestione futura</p><p class="kpi-value amber">3</p><p class="kpi-sub">da ricontattare</p></div>
+  </div>
+
+  <div class="week-strip">
+    <div class="week-card">
+      <p class="wk-tag">W1 · 1–6 apr</p>
+      <p class="wk-title">Candidati</p><p class="wk-big w">7</p>
+      <div class="wk-row">
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--green)">2</p><p class="wk-stat-l">Iscritti</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--red)">2</p><p class="wk-stat-l">Persi</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--amber)">3</p><p class="wk-stat-l">Gestione</p></div>
+      </div>
+      <p class="wk-title">CR</p><p class="wk-big a">28.6%</p>
+      <p class="trend flat">— partenza</p>
+    </div>
+    <div class="week-card best">
+      <p class="wk-tag">W2 · 7–13 apr</p>
+      <p class="wk-title">Candidati</p><p class="wk-big w">6</p>
+      <div class="wk-row">
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--green)">3</p><p class="wk-stat-l">Iscritti</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--red)">2</p><p class="wk-stat-l">Persi</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--dim)">1</p><p class="wk-stat-l">Doppio</p></div>
+      </div>
+      <p class="wk-title">CR</p><p class="wk-big g">50%</p>
+      <p class="trend up">▲ +21.4pp vs W1</p>
+    </div>
+    <div class="week-card" style="border-color:rgba(212,0,58,0.3)">
+      <p class="wk-tag">W3 · 14–20 apr</p>
+      <p class="wk-title">Candidati</p><p class="wk-big r">0</p>
+      <div class="wk-row">
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--dim)">—</p><p class="wk-stat-l">Iscritti</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--dim)">—</p><p class="wk-stat-l">Persi</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--dim)">—</p><p class="wk-stat-l">Gestione</p></div>
+      </div>
+      <p class="wk-title">CR</p><p class="wk-big r">—</p>
+      <p class="trend down">▼ funnel fermo</p>
+    </div>
+    <div class="week-card" style="border-color:rgba(212,0,58,0.3)">
+      <p class="wk-tag">W4 · 21–27 apr</p>
+      <p class="wk-title">Candidati</p><p class="wk-big r">0</p>
+      <div class="wk-row">
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--dim)">—</p><p class="wk-stat-l">Iscritti</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--dim)">—</p><p class="wk-stat-l">Persi</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--dim)">—</p><p class="wk-stat-l">Gestione</p></div>
+      </div>
+      <p class="wk-title">CR</p><p class="wk-big r">—</p>
+      <p class="trend down">▼ secondo stop</p>
+    </div>
+  </div>
+
+  <div class="alert a-red"><span>✕</span><div><strong>Segnale critico.</strong> Il funnel si è fermato completamente nelle ultime due settimane. Se non è una pausa pianificata, è il gap più urgente del mese. Il processo di selezione non può fermarsi.</div></div>
+
+  <div class="chart-grid">
+    <div class="chart-block">
+      <p class="chart-head">Candidati e CR per settimana</p>
+      <div class="legend">
+        <span class="leg"><span class="leg-sq" style="background:#2dd88a"></span>Iscritto</span>
+        <span class="leg"><span class="leg-sq" style="background:#D4003A"></span>Perso</span>
+        <span class="leg"><span class="leg-sq" style="background:#f5a923"></span>Gest./Doppio</span>
+      </div>
+      <div class="chart-wrap" style="height:230px"><canvas id="recBar" role="img" aria-label="Recruitment per settimana"></canvas></div>
+    </div>
+    <div class="chart-block">
+      <p class="chart-head">Dettaglio candidati aprile</p>
+      <div style="overflow-y:auto;max-height:240px">
+        <table style="width:100%;border-collapse:collapse;font-size:12px" id="recTable"></table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ GUEST PASS ════════════════ -->
+<section class="panel" id="tab-guestpass">
+  <div class="section-head"><div class="section-sq"></div><h2>Funnel Guest Pass</h2></div>
+
+  <div class="kpi-row">
+    <div class="kpi"><p class="kpi-label">Pass attivati</p><p class="kpi-value blue">78</p><p class="kpi-sub">totale aprile</p></div>
+    <div class="kpi"><p class="kpi-label">Convertiti</p><p class="kpi-value green">25</p><p class="kpi-sub">45% CR su ~55 chiusi</p></div>
+    <div class="kpi"><p class="kpi-label">Top CR</p><p class="kpi-value red">80%</p><p class="kpi-sub">Daniela · 14 pass</p></div>
+    <div class="kpi"><p class="kpi-label">In gestione</p><p class="kpi-value amber">30+</p><p class="kpi-sub">W3–W4 aperti</p></div>
+  </div>
+
+  <div class="week-strip">
+    <div class="week-card">
+      <p class="wk-tag">W1 · 1–6 apr</p>
+      <p class="wk-title">Pass attivati</p><p class="wk-big w">8</p>
+      <div class="wk-row">
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--green)">2</p><p class="wk-stat-l">Convertiti</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--red)">5</p><p class="wk-stat-l">Non conv.</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--dim)">1</p><p class="wk-stat-l">Canc.</p></div>
+      </div>
+      <p class="wk-title">CR su chiusi</p><p class="wk-big a">28.6%</p>
+      <p class="trend flat">— partenza</p>
+    </div>
+    <div class="week-card best">
+      <p class="wk-tag">W2 · 7–13 apr</p>
+      <p class="wk-title">Pass attivati</p><p class="wk-big w">33</p>
+      <div class="wk-row">
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--green)">16</p><p class="wk-stat-l">Convertiti</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--red)">17</p><p class="wk-stat-l">Non conv.</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--dim)">5</p><p class="wk-stat-l">Canc.</p></div>
+      </div>
+      <p class="wk-title">CR su chiusi</p><p class="wk-big g">51.6%</p>
+      <p class="trend up">▲ +23pp vs W1</p>
+    </div>
+    <div class="week-card">
+      <p class="wk-tag">W3 · 14–20 apr</p>
+      <p class="wk-title">Pass attivati</p><p class="wk-big w">18</p>
+      <div class="wk-row">
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--green)">6</p><p class="wk-stat-l">Convertiti</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--red)">2</p><p class="wk-stat-l">Non conv.</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--blue)">8</p><p class="wk-stat-l">In gest.</p></div>
+      </div>
+      <p class="wk-title">CR su chiusi</p><p class="wk-big g">75%*</p>
+      <p class="trend up">▲ parziale (8 aperti)</p>
+    </div>
+    <div class="week-card partial">
+      <p class="wk-tag">W4 · 21–27 apr</p>
+      <p class="wk-title">Pass attivati</p><p class="wk-big w">21</p>
+      <div class="wk-row">
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--green)">1</p><p class="wk-stat-l">Convertiti</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--red)">1</p><p class="wk-stat-l">Non conv.</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--blue)">19</p><p class="wk-stat-l">In gest.</p></div>
+      </div>
+      <p class="wk-title">CR su chiusi</p><p class="wk-big a">50%*</p>
+      <p class="trend flat">* 19 ancora aperti</p>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-block">
+      <p class="chart-head">Guest pass per settimana — composizione</p>
+      <div class="legend">
+        <span class="leg"><span class="leg-sq" style="background:#2dd88a"></span>Convertito</span>
+        <span class="leg"><span class="leg-sq" style="background:#D4003A"></span>Non conv.</span>
+        <span class="leg"><span class="leg-sq" style="background:#4a9df5"></span>In gestione</span>
+        <span class="leg"><span class="leg-sq" style="background:#2e2e32"></span>Cancellato</span>
+      </div>
+      <div class="chart-wrap" style="height:230px"><canvas id="gpBar" role="img" aria-label="Guest pass per settimana"></canvas></div>
+    </div>
+    <div class="chart-block">
+      <p class="chart-head">CR per consulente — su pass chiusi</p>
+      <div class="chart-wrap" style="height:230px"><canvas id="gpConsBar" role="img" aria-label="CR per consulente"></canvas></div>
+    </div>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Consulente</th><th>Pass tot.</th><th>Conv.</th><th>Non conv.</th><th>In gest.</th><th>CR su chiusi</th><th>Volume</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Daniela</strong></td><td>14</td><td>8</td><td>2</td><td>2+</td><td><span class="score" style="color:var(--green)">80%</span></td><td><div class="btrack"><div class="bfill" style="width:73%;background:var(--green)"></div></div></td></tr>
+        <tr><td><strong>Gaia</strong></td><td>15</td><td>6</td><td>3</td><td>4+</td><td><span class="score" style="color:var(--green)">66.7%</span></td><td><div class="btrack"><div class="bfill" style="width:79%;background:var(--green)"></div></div></td></tr>
+        <tr><td><strong>Matilde</strong></td><td>7</td><td>2</td><td>1</td><td>4+</td><td><span class="score" style="color:var(--blue)">66.7%</span></td><td><div class="btrack"><div class="bfill" style="width:37%;background:var(--blue)"></div></div></td></tr>
+        <tr><td><strong>Camilla</strong></td><td>3</td><td>1</td><td>1</td><td>1</td><td><span class="score" style="color:var(--amber)">50%</span></td><td><div class="btrack"><div class="bfill" style="width:16%;background:var(--amber)"></div></div></td></tr>
+        <tr><td><strong>Genny</strong></td><td>9</td><td>2</td><td>3</td><td>4</td><td><span class="score" style="color:var(--amber)">40%</span></td><td><div class="btrack"><div class="bfill" style="width:47%;background:var(--amber)"></div></div></td></tr>
+        <tr><td><strong>Leonardo</strong></td><td>19</td><td>5</td><td>7</td><td>7+</td><td><span class="score" style="color:var(--amber)">41.7%</span></td><td><div class="btrack"><div class="bfill" style="width:100%;background:var(--amber)"></div></div></td></tr>
+        <tr><td><strong>Chiara</strong></td><td>7</td><td>1</td><td>2</td><td>4</td><td><span class="score" style="color:var(--red)">33.3%</span></td><td><div class="btrack"><div class="bfill" style="width:37%;background:var(--red)"></div></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="alert a-amb"><span>▲</span><div>Leonardo ha il volume più alto (19 pass) ma solo il 41.7% di CR. Con quel volume, anche +10% vale 2 abbonamenti in più a settimana.</div></div>
+</section>
+
+<!-- ════════════════ RINNOVI ════════════════ -->
+<section class="panel" id="tab-rinnovi">
+  <div class="section-head"><div class="section-sq"></div><h2>Funnel Rinnovi</h2></div>
+
+  <div class="kpi-row">
+    <div class="kpi"><p class="kpi-label">Rinnovi gestiti</p><p class="kpi-value blue">450</p><p class="kpi-sub">totale aprile</p></div>
+    <div class="kpi"><p class="kpi-label">Rinnovati (SI)</p><p class="kpi-value green">162</p><p class="kpi-sub">36% del totale</p></div>
+    <div class="kpi"><p class="kpi-label">Persi (NO)</p><p class="kpi-value red">77</p><p class="kpi-sub">17% del totale</p></div>
+    <div class="kpi"><p class="kpi-label">In gestione W4</p><p class="kpi-value amber">33</p><p class="kpi-sub">da chiudere</p></div>
+  </div>
+
+  <div class="week-strip">
+    <div class="week-card">
+      <p class="wk-tag">W1 · 1–6 apr</p>
+      <p class="wk-title">Gestiti</p><p class="wk-big w">86</p>
+      <div class="wk-row">
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--green)">30</p><p class="wk-stat-l">SI</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--red)">20</p><p class="wk-stat-l">NO</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--blue)">3</p><p class="wk-stat-l">Gest.</p></div>
+      </div>
+      <p class="wk-title">CR rinnovo</p><p class="wk-big a">34.9%</p>
+      <p class="trend flat">— partenza</p>
+    </div>
+    <div class="week-card best">
+      <p class="wk-tag">W2 · 7–13 apr</p>
+      <p class="wk-title">Gestiti</p><p class="wk-big w">96</p>
+      <div class="wk-row">
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--green)">39</p><p class="wk-stat-l">SI</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--red)">19</p><p class="wk-stat-l">NO</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--blue)">2</p><p class="wk-stat-l">Gest.</p></div>
+      </div>
+      <p class="wk-title">CR rinnovo</p><p class="wk-big g">40.6%</p>
+      <p class="trend up">▲ +5.7pp vs W1</p>
+    </div>
+    <div class="week-card">
+      <p class="wk-tag">W3 · 14–20 apr</p>
+      <p class="wk-title">Gestiti</p><p class="wk-big w">111</p>
+      <div class="wk-row">
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--green)">39</p><p class="wk-stat-l">SI</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--red)">20</p><p class="wk-stat-l">NO</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--blue)">8</p><p class="wk-stat-l">Gest.</p></div>
+      </div>
+      <p class="wk-title">CR rinnovo</p><p class="wk-big a">35.1%</p>
+      <p class="trend down">▼ −5.5pp vs W2</p>
+    </div>
+    <div class="week-card partial">
+      <p class="wk-tag">W4 · 21–27 apr</p>
+      <p class="wk-title">Gestiti</p><p class="wk-big w">154</p>
+      <div class="wk-row">
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--green)">52</p><p class="wk-stat-l">SI</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--red)">18</p><p class="wk-stat-l">NO</p></div>
+        <div class="wk-stat"><p class="wk-stat-n" style="color:var(--blue)">33</p><p class="wk-stat-l">Gest.</p></div>
+      </div>
+      <p class="wk-title">CR su chiusi</p><p class="wk-big a">33.8%*</p>
+      <p class="trend down">▼ 33 ancora aperti</p>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-block">
+      <p class="chart-head">Volume e composizione rinnovi</p>
+      <div class="legend">
+        <span class="leg"><span class="leg-sq" style="background:#2dd88a"></span>Rinnovato</span>
+        <span class="leg"><span class="leg-sq" style="background:#D4003A"></span>Perso</span>
+        <span class="leg"><span class="leg-sq" style="background:#4a9df5"></span>In gestione</span>
+        <span class="leg"><span class="leg-sq" style="background:#2e2e32"></span>Senza stato</span>
+      </div>
+      <div class="chart-wrap" style="height:230px"><canvas id="rinnBar" role="img" aria-label="Rinnovi per settimana"></canvas></div>
+    </div>
+    <div class="chart-block">
+      <p class="chart-head">Tasso di rinnovo settimanale</p>
+      <div class="chart-wrap" style="height:230px"><canvas id="rinnLine" role="img" aria-label="CR rinnovi"></canvas></div>
+    </div>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Consulente</th><th>Assegnati</th><th>% volume</th><th>Carico</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Chiara</strong></td><td>122</td><td>46%</td><td><div class="btrack" style="width:140px"><div class="bfill" style="width:100%;background:#a78bfa"></div></div></td></tr>
+        <tr><td><strong>Gaia</strong></td><td>80</td><td>30%</td><td><div class="btrack" style="width:140px"><div class="bfill" style="width:65%;background:#a78bfa"></div></div></td></tr>
+        <tr><td><strong>Leonardo</strong></td><td>35</td><td>13%</td><td><div class="btrack" style="width:140px"><div class="bfill" style="width:29%;background:var(--blue)"></div></div></td></tr>
+        <tr><td><strong>Daniela</strong></td><td>12</td><td>5%</td><td><div class="btrack" style="width:140px"><div class="bfill" style="width:10%;background:var(--blue)"></div></div></td></tr>
+        <tr><td><strong>Genny</strong></td><td>6</td><td>2%</td><td><div class="btrack" style="width:140px"><div class="bfill" style="width:5%;background:var(--dim)"></div></div></td></tr>
+        <tr><td><strong>Matilde</strong></td><td>4</td><td>2%</td><td><div class="btrack" style="width:140px"><div class="bfill" style="width:3%;background:var(--dim)"></div></div></td></tr>
+        <tr><td><strong>Camilla</strong></td><td>2</td><td>1%</td><td><div class="btrack" style="width:140px"><div class="bfill" style="width:2%;background:var(--dim)"></div></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="alert a-amb"><span>▲</span><div>Chiara + Gaia gestiscono il 76% dei rinnovi. Squilibrio di carico da valutare: un calo di qualità su queste due figure impatta tre quarti del portafoglio rinnovi.</div></div>
+</section>
+
+<!-- ════════════════ TASK ════════════════ -->
+<section class="panel" id="tab-task">
+  <div class="section-head"><div class="section-sq"></div><h2>Qualità Task</h2></div>
+
+  <div class="kpi-row">
+    <div class="kpi"><p class="kpi-label">Task totali</p><p class="kpi-value blue">739</p><p class="kpi-sub">aprile 2026</p></div>
+    <div class="kpi"><p class="kpi-label">Esito positivo</p><p class="kpi-value green">375</p><p class="kpi-sub">50.7% del totale</p></div>
+    <div class="kpi"><p class="kpi-label">Qualità media</p><p class="kpi-value amber">38%</p><p class="kpi-sub">margine miglioramento alto</p></div>
+    <div class="kpi"><p class="kpi-label">Volume max</p><p class="kpi-value red">Daniela</p><p class="kpi-sub">235 task totali</p></div>
+  </div>
+
+  <!-- Weekly task cards per consulente -->
+  <div class="week-strip">
+    <div class="week-card">
+      <p class="wk-tag">W1 · 1–6 apr</p>
+      <p class="wk-title">Task eseguiti</p><p class="wk-big w">72</p>
+      <div style="margin-top:10px;font-size:12px;color:var(--muted)">
+        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line)"><span>Daniela</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:700"><span style="color:var(--green)">17/12</span> · <span style="color:var(--amber)">57.6%</span></span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line)"><span>Leonardo</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:700"><span style="color:var(--green)">13/0</span> · <span style="color:var(--amber)">44.7%</span></span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line)"><span>Chiara</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:700"><span style="color:var(--amber)">5/8</span> · <span style="color:var(--red)">27.5%</span></span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Gaia</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:700"><span style="color:var(--green)">11/6</span> · <span style="color:var(--red)">25.5%</span></span></div>
+      </div>
+      <p style="font-size:10px;color:var(--dim);margin-top:8px">formato: pos/neg · qualità%</p>
+    </div>
+    <div class="week-card best">
+      <p class="wk-tag">W2 · 7–13 apr</p>
+      <p class="wk-title">Task eseguiti</p><p class="wk-big w">198</p>
+      <div style="margin-top:10px;font-size:12px;color:var(--muted)">
+        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line)"><span>Daniela</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:700"><span style="color:var(--amber)">33/58</span> · <span style="color:var(--amber)">42.5%</span></span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line)"><span>Leonardo</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:700"><span style="color:var(--green)">31/17</span> · <span style="color:var(--amber)">39.9%</span></span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line)"><span>Chiara</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:700"><span style="color:var(--amber)">21/20</span> · <span style="color:var(--red)">33%</span></span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line)"><span>Gaia</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:700"><span style="color:var(--green)">33/7</span> · <span style="color:var(--amber)">43.8%</span></span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Genny</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:700"><span style="color:var(--green)">15/2</span> · <span style="color:var(--amber)">51.4%</span></span></div>
+      </div>
+    </div>
+    <div class="week-card">
+      <p class="wk-tag">W3 · 14–20 apr</p>
+      <p class="wk-title">Task eseguiti</p><p class="wk-big w">175</p>
+      <div style="margin-top:10px;font-size:12px;color:var(--muted)">
+        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line)"><span>Daniela</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:700"><span style="color:var(--amber)">22/31</span> · <span style="color:var(--amber)">43.5%</span></span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line)"><span>Leonardo</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:700"><span style="color:var(--amber)">13/26</span> · <span style="color:var(--red)">33.1%</span></span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line)"><span>Chiara</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:700"><span style="color:var(--amber)">5/9</span> · <span style="color:var(--red)">23.1%</span></span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line)"><span>Gaia</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:700"><span style="color:var(--green)">50/3</span> · <span style="color:var(--amber)">38.3%</span></span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Genny</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:700"><span style="color:var(--green)">13/1</span> · <span style="color:var(--amber)">35.9%</span></span></div>
+      </div>
+    </div>
+    <div class="week-card">
+      <p class="wk-tag">W4 · 21–27 apr</p>
+      <p class="wk-title">Task eseguiti</p><p class="wk-big w">122</p>
+      <div style="margin-top:10px;font-size:12px;color:var(--muted)">
+        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line)"><span>Daniela</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:700"><span style="color:var(--amber)">18/42</span> · <span style="color:var(--amber)">43.6%</span></span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line)"><span>Leonardo</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:700"><span style="color:var(--amber)">13/15</span> · <span style="color:var(--red)">27.8%</span></span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line)"><span>Chiara</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:700"><span style="color:var(--amber)">10/4</span> · <span style="color:var(--red)">33.5%</span></span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Gaia</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:700"><span style="color:var(--amber)">2/0</span> · <span style="color:var(--red)">17.9%</span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-block">
+      <p class="chart-head">Volume task per consulente</p>
+      <div class="legend">
+        <span class="leg"><span class="leg-sq" style="background:#4a9df5"></span>Daniela</span>
+        <span class="leg"><span class="leg-sq" style="background:#2dd88a"></span>Gaia</span>
+        <span class="leg"><span class="leg-sq" style="background:#D4003A"></span>Leonardo</span>
+        <span class="leg"><span class="leg-sq" style="background:#a78bfa"></span>Chiara</span>
+        <span class="leg"><span class="leg-sq" style="background:#f5a923"></span>Genny</span>
+      </div>
+      <div class="chart-wrap" style="height:230px"><canvas id="taskVol" role="img" aria-label="Volume task"></canvas></div>
+    </div>
+    <div class="chart-block">
+      <p class="chart-head">Qualità media task % — trend settimanale</p>
+      <div class="chart-wrap" style="height:230px"><canvas id="taskQual" role="img" aria-label="Qualità task"></canvas></div>
+    </div>
+  </div>
+
+  <div class="alert a-blu"><span>ℹ</span><div>Qualità bassa non misura il lavoro fatto, ma la struttura delle note. Un format standard (obiettivo · risposta · prossimo step) risolverebbe il problema in una settimana e renderebbe il CRM leggibile da tutto il team.</div></div>
+</section>
+
+<!-- ════════════════ SINTESI ════════════════ -->
+<section class="panel" id="tab-sintesi">
+  <div class="section-head"><div class="section-sq"></div><h2>Sintesi Aprile</h2></div>
+
+  <div class="kpi-row">
+    <div class="kpi"><p class="kpi-label">Lead totali</p><p class="kpi-value blue">178</p></div>
+    <div class="kpi"><p class="kpi-label">Iscrizioni conf.</p><p class="kpi-value green">60</p></div>
+    <div class="kpi"><p class="kpi-label">Pass attivati</p><p class="kpi-value blue">78</p></div>
+    <div class="kpi"><p class="kpi-label">Rinnovi gestiti</p><p class="kpi-value blue">450</p></div>
+    <div class="kpi"><p class="kpi-label">Task eseguiti</p><p class="kpi-value blue">739</p></div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-head" style="margin-bottom:1rem"><div style="width:14px;height:14px;background:var(--green)"></div><h2 style="font-size:22px;color:var(--green)">Punti di forza</h2></div>
+  <div class="ins-grid">
+    <div class="ins ig"><p class="ins-lbl">Richieste</p><p class="ins-title">W2 — settimana record</p><p class="ins-text"><strong>58 lead e 44.8% CR</strong>: picco assoluto su tutti i funnel. Da analizzare cosa l'ha generato per replicarlo sistematicamente.</p></div>
+    <div class="ins ig"><p class="ins-lbl">Guest Pass</p><p class="ins-title">Daniela — 80% CR</p><p class="ins-text">Il risultato migliore del team sui pass. Il suo approccio di follow-up va documentato e condiviso come <strong>best practice</strong> interna.</p></div>
+    <div class="ins ig"><p class="ins-lbl">Qualità Task</p><p class="ins-title">Genny — 90% positivi</p><p class="ins-text">Tasso di esiti positivi più alto del team. Volume basso ma <strong>efficacia altissima</strong>. Qualità media (44%) superiore a Gaia e Chiara.</p></div>
+    <div class="ins ig"><p class="ins-lbl">Rinnovi</p><p class="ins-title">W2 — 40.6% rinnovo</p><p class="ins-text">39 rinnovi su 96 gestiti: il picco mensile. Dimostra che il team <strong>sa performare sotto pressione</strong> su alto volume.</p></div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-head" style="margin-bottom:1rem"><div style="width:14px;height:14px;background:var(--red)"></div><h2 style="font-size:22px;color:var(--red)">Aree critiche</h2></div>
+  <div class="ins-grid">
+    <div class="ins ir"><p class="ins-lbl" style="color:var(--red)">Recruitment</p><p class="ins-title">Zero in W3 + W4</p><p class="ins-text">Il funnel si è fermato per due settimane consecutive. Se non pianificato, è il <strong>gap più urgente</strong> da indagare subito.</p></div>
+    <div class="ins ia"><p class="ins-lbl" style="color:var(--amber)">Rinnovi</p><p class="ins-title">Carico sbilanciato</p><p class="ins-text">Chiara + Gaia gestiscono il <strong>76% dei rinnovi</strong>. Rischio operativo concreto se una delle due rallenta.</p></div>
+    <div class="ins ia"><p class="ins-lbl" style="color:var(--amber)">Guest Pass</p><p class="ins-title">Leonardo sotto potenziale</p><p class="ins-text">Volume record (19 pass) ma solo <strong>41.7% CR</strong>. Anche +10% vale 2 abbonamenti in più a settimana.</p></div>
+    <div class="ins ia"><p class="ins-lbl" style="color:var(--amber)">Task</p><p class="ins-title">Qualità sistematicamente bassa</p><p class="ins-text">Media ~38%. Non misura il lavoro, ma la documentazione. Un <strong>format standard</strong> risolverebbe in una settimana.</p></div>
+    <div class="ins ia"><p class="ins-lbl" style="color:var(--amber)">Task Gaia</p><p class="ins-title">Qualità in calo W4: 17.9%</p><p class="ins-text">Crollo da 43.8% (W2) a 17.9% (W4). Probabile effetto del sovraccarico rinnovi. Da monitorare in W5.</p></div>
+    <div class="ins ib"><p class="ins-lbl" style="color:var(--blue)">Nota</p><p class="ins-title">W4 dati non definitivi</p><p class="ins-text">22 lead, 19 pass e 33 rinnovi ancora aperti. <strong>Non valutare W4</strong> prima della chiusura completa settimana.</p></div>
+  </div>
+</section>
+
+</div><!-- /main -->
+
+<footer>
+  <span>Lume Fitness · Macerata · Montecassiano</span>
+  <span>Aprile 2026 · dati Airtable · 28/04/2026</span>
+</footer>
+
+<script>
+/* ── Tab logic ── */
+const TABS = ['richieste','recruitment','guestpass','rinnovi','task','sintesi'];
+function showTab(name, btn, fromMobile) {
+  TABS.forEach(t => {
+    document.getElementById('tab-'+t).classList.remove('active');
+  });
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.mobile-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(btn) btn.classList.add('active');
+  const mt = document.getElementById('mtab-'+name);
+  if(mt) mt.classList.add('active');
+  const dt = document.querySelector('.nav-tab[onclick*="\''+name+'\'"]');
+  if(dt) dt.classList.add('active');
+  if(fromMobile) closeMenu();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ── Mobile menu ── */
+function toggleMenu() {
+  const m = document.getElementById('mobileMenu');
+  m.classList.toggle('open');
+}
+function closeMenu() { document.getElementById('mobileMenu').classList.remove('open'); }
+function closeMenuOnBg(e) { if(e.target===document.getElementById('mobileMenu')) closeMenu(); }
+
+/* ── Charts ── */
+const W = ['W1 1-6apr','W2 7-13apr','W3 14-20apr','W4 21-27apr'];
+const GC = 'rgba(255,255,255,0.05)', TC = '#666';
+const base = {
+  responsive:true, maintainAspectRatio:false,
+  plugins:{ legend:{ display:false } },
+  scales:{
+    x:{ ticks:{ color:TC, font:{ size:10, family:"'Barlow Condensed',sans-serif" }, maxRotation:0 }, grid:{ color:GC }, border:{ display:false } },
+    y:{ ticks:{ color:TC, font:{ size:11 } }, grid:{ color:GC }, border:{ display:false } }
+  }
+};
+const stk = { ...base, scales:{ ...base.scales, x:{ ...base.scales.x, stacked:true }, y:{ ...base.scales.y, stacked:true } } };
+
+new Chart('richBar', { type:'bar', data:{ labels:W, datasets:[
+  { label:'Iscritto', data:[17,26,15,2], backgroundColor:'#2dd88a' },
+  { label:'Perso', data:[13,13,7,3], backgroundColor:'#D4003A' },
+  { label:'Gest. futura', data:[8,14,10,7], backgroundColor:'#f5a923' },
+  { label:'In prova/gest.', data:[2,0,3,22], backgroundColor:'#4a9df5' },
+]}, options:stk });
+
+new Chart('richLine', { type:'line', data:{ labels:['W1','W2','W3'], datasets:[{
+  label:'CR %', data:[37.0,44.8,40.5], borderColor:'#2dd88a', backgroundColor:'rgba(45,216,138,0.08)',
+  tension:.4, pointRadius:7, pointBackgroundColor:'#2dd88a', pointBorderColor:'#151517', pointBorderWidth:2, fill:true, borderWidth:2
+}]}, options:{ ...base, scales:{ ...base.scales, y:{ ...base.scales.y, min:25, max:55, ticks:{ ...base.scales.y.ticks, callback:v=>v+'%' } } } } });
+
+function pie(id, labels, data, colors) {
+  new Chart(id, { type:'doughnut', data:{ labels, datasets:[{ data, backgroundColor:colors, borderColor:'#1c1c1f', borderWidth:2 }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ font:{ size:11 }, color:TC, boxWidth:9, padding:9 } } } }
+  });
+}
+pie('tipoW1',['Tour','Referral','Rich. Prova','Recruitment','Up/Cross','Abbonamenti','Pass','Cortesia','Manuale'],[9,7,9,7,5,3,2,2,2],['#4a9df5','#2dd88a','#38c9b0','#f5a923','#D4003A','#555','#f07060','#a78bfa','#3a3a40']);
+pie('tipoW2',['Tour','Up/Cross','Abbonamenti','Recruitment','Rich. Prova','Referral','Cortesia','Manuale','Pass'],[20,11,9,6,4,2,2,3,1],['#4a9df5','#D4003A','#555','#f5a923','#38c9b0','#2dd88a','#a78bfa','#3a3a40','#f07060']);
+
+new Chart('recBar', { type:'bar', data:{ labels:W, datasets:[
+  { label:'Iscritto', data:[2,3,0,0], backgroundColor:'#2dd88a' },
+  { label:'Perso', data:[2,2,0,0], backgroundColor:'#D4003A' },
+  { label:'Gest./Doppio', data:[3,1,0,0], backgroundColor:'#f5a923' },
+]}, options:stk });
+
+const cands=[['Benedetta Pierluigi','W1','bg','Iscritto'],['Chiara Ferranti','W1','bg','Iscritto'],['Alice Pavoni','W2','bg','Iscritto'],['Giorgia Rocchetti','W2','bg','Iscritto'],['Gaia Gentili','W2','bg','Iscritto'],['Massimo Cirioni','W1','br','Perso'],['Elena Pierluigi','W1','br','Perso'],['Martina Morosini','W2','br','Perso'],['Matteo V. Corfù','W2','br','Perso'],['Agata Di Pietro','W1','ba','Gest. futura'],['Martina Caproli','W1','ba','Gest. futura'],['Jessica Montenovo','W1','bd','Cancellato'],['Federica Ratano','W2','bd','Doppio']];
+document.getElementById('recTable').innerHTML='<thead><tr><th style="text-align:left;font-family:\'Barlow Condensed\',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#666;padding:0 0 10px;border-bottom:1px solid rgba(255,255,255,0.07)">Candidato</th><th style="text-align:left;font-family:\'Barlow Condensed\',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#666;padding:0 10px 10px;border-bottom:1px solid rgba(255,255,255,0.07)">Sett.</th><th style="text-align:left;font-family:\'Barlow Condensed\',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#666;padding:0 10px 10px;border-bottom:1px solid rgba(255,255,255,0.07)">Esito</th></tr></thead><tbody>'+cands.map(([n,w,c,e])=>`<tr><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.07);font-size:12px">${n}</td><td style="padding:10px;border-bottom:1px solid rgba(255,255,255,0.07);font-size:11px;color:#666;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px">${w}</td><td style="padding:10px;border-bottom:1px solid rgba(255,255,255,0.07)"><span class="badge ${c}">${e}</span></td></tr>`).join('')+'</tbody>';
+
+new Chart('gpBar', { type:'bar', data:{ labels:W, datasets:[
+  { label:'Convertito', data:[2,16,6,1], backgroundColor:'#2dd88a' },
+  { label:'Non conv.', data:[5,17,2,1], backgroundColor:'#D4003A' },
+  { label:'In gestione', data:[1,2,8,19], backgroundColor:'#4a9df5' },
+  { label:'Cancellato', data:[1,5,0,0], backgroundColor:'#2e2e32' },
+]}, options:stk });
+
+new Chart('gpConsBar', { type:'bar', data:{
+  labels:['Daniela','Gaia','Matilde','Camilla','Genny','Leonardo','Chiara'],
+  datasets:[{ label:'CR %', data:[80,66.7,66.7,50,40,41.7,33.3], borderRadius:2,
+    backgroundColor:[80,66.7,66.7,50,40,41.7,33.3].map(v=>v>=65?'#2dd88a':v>=45?'#f5a923':'#D4003A') }]
+}, options:{ ...base, indexAxis:'y', scales:{ ...base.scales, y:{ ...base.scales.y, ticks:{ color:TC, font:{ size:12 } } }, x:{ ...base.scales.x, max:100, ticks:{ ...base.scales.x.ticks, callback:v=>v+'%' } } } } });
+
+new Chart('rinnBar', { type:'bar', data:{ labels:W, datasets:[
+  { label:'Rinnovato', data:[30,39,39,52], backgroundColor:'#2dd88a' },
+  { label:'Perso', data:[20,19,20,18], backgroundColor:'#D4003A' },
+  { label:'In gestione', data:[3,2,8,33], backgroundColor:'#4a9df5' },
+  { label:'Senza stato', data:[33,36,44,51], backgroundColor:'#2e2e32' },
+]}, options:stk });
+
+new Chart('rinnLine', { type:'line', data:{ labels:W, datasets:[{
+  label:'CR %', data:[34.9,40.6,35.1,33.8], borderColor:'#4a9df5', backgroundColor:'rgba(74,157,245,0.08)',
+  tension:.4, pointRadius:7, pointBackgroundColor:'#4a9df5', pointBorderColor:'#151517', pointBorderWidth:2, fill:true, borderWidth:2
+}]}, options:{ ...base, scales:{ ...base.scales, y:{ ...base.scales.y, min:20, max:55, ticks:{ ...base.scales.y.ticks, callback:v=>v+'%' } } } } });
+
+new Chart('taskVol', { type:'bar', data:{ labels:W, datasets:[
+  { label:'Daniela', data:[29,91,53,62], backgroundColor:'#4a9df5' },
+  { label:'Gaia', data:[17,40,54,13], backgroundColor:'#2dd88a' },
+  { label:'Leonardo', data:[13,48,39,30], backgroundColor:'#D4003A' },
+  { label:'Chiara', data:[13,42,15,17], backgroundColor:'#a78bfa' },
+  { label:'Genny', data:[0,17,14,0], backgroundColor:'#f5a923' },
+]}, options:stk });
+
+new Chart('taskQual', { type:'line', data:{ labels:W, datasets:[
+  { label:'Daniela', data:[57.6,42.5,43.5,43.6], borderColor:'#4a9df5', pointBackgroundColor:'#4a9df5', pointBorderColor:'#151517', pointBorderWidth:2, tension:.4, borderWidth:2, pointRadius:5 },
+  { label:'Gaia', data:[25.5,43.8,38.3,17.9], borderColor:'#2dd88a', pointBackgroundColor:'#2dd88a', pointBorderColor:'#151517', pointBorderWidth:2, tension:.4, borderWidth:2, pointRadius:5 },
+  { label:'Leonardo', data:[44.7,39.9,33.1,27.8], borderColor:'#D4003A', pointBackgroundColor:'#D4003A', pointBorderColor:'#151517', pointBorderWidth:2, tension:.4, borderWidth:2, pointRadius:5 },
+  { label:'Chiara', data:[27.5,33.0,23.1,33.5], borderColor:'#a78bfa', pointBackgroundColor:'#a78bfa', pointBorderColor:'#151517', pointBorderWidth:2, tension:.4, borderWidth:2, pointRadius:5 },
+  { label:'Genny', data:[null,51.4,35.9,null], borderColor:'#f5a923', pointBackgroundColor:'#f5a923', pointBorderColor:'#151517', pointBorderWidth:2, tension:.4, borderWidth:2, pointRadius:5, spanGaps:false },
+]}, options:{ ...base, plugins:{ legend:{ display:true, labels:{ color:TC, boxWidth:10, padding:14, font:{ size:12 } } } }, scales:{ ...base.scales, y:{ ...base.scales.y, min:10, max:65, ticks:{ ...base.scales.y.ticks, callback:v=>v+'%' } } } } });
+</script>
+</body>
+</html>
